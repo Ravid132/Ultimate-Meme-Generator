@@ -9,10 +9,40 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body onload="onInit()">
+    <!-- NAV BAR -->
+    <header></header>
 
+    <!-- GALLERY -->
+    <section class="gallery-container">
+        <div class="images-container"></div>
+    </section>
+
+    <!-- CANVAS/EDITOR-->
+    <main class="editor-container">
+        <section class="canvas-container">
+            <canvas id="canvas" width="450" height="450"></canvas>
+        </section>
+
+        <section class="edits">
+            <input type="text" name="meme-txt" placeholder="please enter your text here" oninput="onTextChange(this.value)" />
+            <button onclick="onAddLine()">Add Line</button>
+            <button onclick="onDeleteLine()">Delete Line</button>
+            <button onclick="onChangeTextSize(2)">Increase</button>
+            <button onclick="onChangeTextSize(-2)">Decrease</button>
+            <button onclick="onMoveText(-5)">Up</button>
+            <button onclick="onMoveText(5)">Down</button>
+            <button onclick="onSwitchLines()">Switch Line</button>
+        </section>
+    </main>
+    <!-- FOOTER -->
 
     <script src="js/main.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage-service.js"></script>
+    <script src="js/meme-service.js"></script>
+    <script src="js/meme-controller.js"></script>
+
 </body>
 
 </html>
