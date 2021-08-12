@@ -11,30 +11,116 @@
 
 <body onload="onInit()">
     <!-- NAV BAR -->
-    <header></header>
+    <header class="main-header flex align-center space-between">
+        <div class="logo flex">MemeGenerator</div>
+        <ul class="main-nav flex clean-list align-center">
+            <li><a id="gallery" class="flex align-center active" onclick="onLoadGallery()">Gallery</a></li>
+            <li><a id="about" class="flex align-center ">About</a></li>
+            <li><a id="myMemes" class="flex align-center" onclick="onLoadMyMemes()">My Memes</a></li>
+        </ul>
+    </header>
 
     <!-- GALLERY -->
-    <section class="gallery-container">
-        <div class="images-container"></div>
+    <section class="gallery-container main-layout">
+        <div class="filters-container flex align-center">
+            <div class="search-area flex align-center">
+                <input type="search" class="search-input" placeholder="Search" name="search" />
+                <img src="icons/search-icon.svg" />
+            </div>
+            <div class="keywords-container flex space-evenly"></div>
+            <button class="keywords-btn">More</button>
+        </div>
+        <div class="images-container images-gallery"></div>
     </section>
 
     <!-- CANVAS/EDITOR-->
-    <main class="editor-container">
+    <main class="editor-container main-layout display-none flex">
         <section class="canvas-container">
             <canvas id="canvas" width="450" height="450"></canvas>
         </section>
 
-        <section class="edits">
-            <input type="text" name="meme-txt" placeholder="please enter your text here" oninput="onTextChange(this.value)" />
-            <button onclick="onAddLine()">Add Line</button>
-            <button onclick="onDeleteLine()">Delete Line</button>
-            <button onclick="onChangeTextSize(2)">Increase</button>
-            <button onclick="onChangeTextSize(-2)">Decrease</button>
-            <button onclick="onMoveText(-5)">Up</button>
-            <button onclick="onMoveText(5)">Down</button>
-            <button onclick="onSwitchLines()">Switch Line</button>
+        <section class="edits-container flex column align-center justify-center">
+            <input class="meme-txt-input" type="text" name="meme-txt" placeholder="please enter your text here" oninput="onTextChange(this.value)" />
+            <div class="line-edits-container">
+                <button class="switch-line-btn" onclick="onSwitchLines()">
+                    <img src="icons/arrowup-icon.svg" />
+                    <img src="icons/arrowdown-icon.svg" />
+
+                </button>
+                <button class="add-line-btn" onclick="onAddLine()">
+                    <img src="icons/add-icon.svg" />
+                </button>
+                <button class="delete-line-btn" onclick="onDeleteLine()">
+                    <img src="icons/delete-icon.svg" />
+
+                </button>
+            </div>
+            <div class="txt-edits-container grid">
+                <button class="txt-btn increase-font-size" onclick="onChangeTextSize(2)">
+                    <!-- <img src="icons/A+.svg" /> -->
+                    <img src="icons/A+.png" />
+                </button>
+                <button class="txt-btn decrease-font-size" onclick="onChangeTextSize(-2)">
+                    <img src="icons/A-.png" />
+                </button>
+                <!-- <button onclick="onMoveText(-5)">Up</button>
+                <button onclick="onMoveText(5)">Down</button> -->
+
+                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                    <img src="icons/move-left-icon.svg" />
+                </button>
+                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                    <img src="icons/move-middle-icon.svg" />
+                </button>
+                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                    <img src="icons/move-right-icon.svg" />
+                </button>
+
+                <select class="txt-btn font-family-select" onclick="onMoveText(5)">
+                    <option value="impact">Impact</option>
+                    <option value="poppins">Poppins</option>
+
+                    <!-- <img src="icons/impact.png" />
+                    <img src="icons/arrowdown-icon.svg" /> -->
+                </select>
+
+                <button class="txt-btn outline-txt-color" onclick="onMoveText(5)">
+                    <img src="icons/s-icon.png" />
+                </button>
+
+                <button class="txt-btn fill-txt-color" onclick="onMoveText(5)">
+                    <img src="icons/color-icon.svg" />
+                </button>
+
+
+            </div>
+
+            <div class="share-download-container flex align-center space-between  ">
+                <button class="share-btn flex align-center">
+                    <img src="icons/share-icon.svg" />
+                    <p>Share</p>
+                </button>
+
+                <button class="download-btn flex align-center justify-center">
+                    <img src="icons/download-icon.svg" />
+                    <p>Download</p>
+                </button>
+            </div>
+            <button class="save-btn flex align-center justify-center" onclick="onSaveMeme()">
+                <!-- <img src="icons/download-icon.svg" /> -->
+                <p>Save</p>
+            </button>
         </section>
+
+
     </main>
+
+    <!-- MY SAVED MEMES -->
+    <section class="gallery-container main-layout">
+        <div class="my-gallery images-container">
+
+        </div>
+    </section>
     <!-- FOOTER -->
 
     <script src="js/main.js"></script>

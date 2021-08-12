@@ -1,5 +1,7 @@
 'use strict'
 
+const MEME_DB = 'MemeDB';
+var gSavedMemes = [];
 var gKeyWords = {
     'happy': 1,
     'funny': 1,
@@ -28,6 +30,86 @@ var gImgs = [{
     {
         id: 2,
         url: 'meme-images/2.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 3,
+        url: 'meme-images/3.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 4,
+        url: 'meme-images/4.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 5,
+        url: 'meme-images/5.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 6,
+        url: 'meme-images/6.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 7,
+        url: 'meme-images/7.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 8,
+        url: 'meme-images/8.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 9,
+        url: 'meme-images/9.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 10,
+        url: 'meme-images/10.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 11,
+        url: 'meme-images/11.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 12,
+        url: 'meme-images/12.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 13,
+        url: 'meme-images/13.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 14,
+        url: 'meme-images/14.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 15,
+        url: 'meme-images/15.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 16,
+        url: 'meme-images/16.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 17,
+        url: 'meme-images/17.jpg',
+        keywords: ['funny', 'happy', 'crazy']
+    },
+    {
+        id: 18,
+        url: 'meme-images/18.jpg',
         keywords: ['funny', 'happy', 'crazy']
     },
 ];
@@ -117,4 +199,30 @@ function moveText(val) {
 function changeTextSize(val) {
     var selectedLine = getSelectedLine();
     selectedLine.size += val;
+}
+
+
+// SAVE TO STORAGE
+
+function saveMemeToStorage(meme) {
+    var memeData = {
+        meme: gMeme,
+        url: meme.toDataURL()
+    }
+    gSavedMemes.push(memeData);
+    saveToStorage(MEME_DB, gSavedMemes);
+}
+
+function loadMemesFromStorage() {
+    return loadFromStorage(MEME_DB);
+}
+
+function getSavedMemes() {
+    gSavedMemes = loadMemesFromStorage();
+    if (!gSavedMemes || !gSavedMemes.length) gSavedMemes = [];
+}
+
+function deleteMemeFromStorage(id) {
+    gSavedMemes.splice(id, 1);
+    saveToStorage(MEME_DB, gSavedMemes);
 }

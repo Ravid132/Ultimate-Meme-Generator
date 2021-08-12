@@ -6,14 +6,14 @@ var gCurrMeme;
 
 function onInit() {
     renderGallery();
+    getSavedMemes();
+    renderSavedGallery();
 }
 
 function renderGallery() {
     var images = getImages();
-    var elGallery = document.querySelector('.images-container');
-    console.log(elGallery);
+    var elGallery = document.querySelector('.images-gallery');
     var strHTML = images.map((img) => {
-        console.log(img);
         return `
             <img class="meme" src="${img.url}" id="${img.id}" onclick="onSelectImage('${img.id}')" />
             `
@@ -48,16 +48,16 @@ function drawTextOnCanvas() {
     } else {
         //default values
     }
-    console.log(lines);
     if (lines) {
         lines.map((line) => {
             gCtx.lineWidth = '1';
             gCtx.font = line.size + 'px ' + line.font;
             gCtx.textAlign = line.textAlign;
             gCtx.fillText(line.txt, line.posX, line.posY);
-            // gCtx.Stroke(line.txt, line.posX, line.posY);
+            // gCtx.stroke(line.txt, line.posX, line.posY);
         })
     }
+
 
 }
 
@@ -99,6 +99,84 @@ function onSwitchLines() {
 
 
 function onSelectImage(id) {
+    displayContent('editor');
+
     createNewMeme(id);
-    renderCanvas()
+    renderCanvas();
+}
+
+function displayContent(content) {
+
+    var elEditor = document.querySelector('.editor-container');
+    var elNavGallery = document.querySelector('#gallery');
+    var elNavMyMemes = document.querySelector('#myMemes');
+    var elGallery = document.querySelector('.gallery-container');
+    var elMyMemes = document.querySelector('.my-gallery');
+
+    switch (content) {
+        case 'editor':
+            elNavGallery.classList.remove('active');
+            elNavMyMemes.classList.remove('active');
+            elGallery.style.display = 'none';
+            elEditor.style.display = 'flex';
+            elMyMemes.style.display = 'none';
+            break;
+        case 'gallery':
+            elNavGallery.classList.add('active');
+            elNavMyMemes.classList.remove('active');
+            elGallery.style.display = 'block';
+            elEditor.style.display = 'none';
+            elMyMemes.style.display = 'none';
+
+            break;
+        case 'myMemes':
+            elNavMyMemes.classList.add('active');
+            elNavGallery.classList.remove('active');
+            elGallery.style.display = 'none';
+            elEditor.style.display = 'none';
+            elMyMemes.style.display = 'grid';
+            break;
+        default:
+            break;
+    }
+}
+
+function onLoadGallery() {
+    displayContent('gallery');
+}
+
+function onLoadMyMemes() {
+    displayContent('myMemes');
+    renderSavedGallery();
+}
+
+
+function onSaveMeme() {
+    if (!gCurrMeme) return;
+    // saveMemeToStorage(gCurrMeme);
+    renderCanvas();
+    console.log(gElCanvas);
+    saveMemeToStorage(gElCanvas);
+}
+
+function renderSavedGallery() {
+    var memes = loadMemesFromStorage();
+    var elMyGallery = document.querySelector('.my-gallery');
+    if (!memes || !memes.length) return elMyGallery.innerHTML = `<h1>You dont have any memes</h1>`;
+    var strHTML = memes.map((meme, idx) => {
+        return `
+        <div>
+        <img class="meme" src="${meme.url}" />
+        <button onclick="onDeleteMeme('${idx}')">Delete</button>
+        </div>
+        `
+    });
+
+
+    elMyGallery.innerHTML = strHTML.join('');
+}
+
+function onDeleteMeme(id) {
+    deleteMemeFromStorage(id);
+    renderSavedGallery();
 }
