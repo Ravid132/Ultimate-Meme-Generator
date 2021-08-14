@@ -504,6 +504,11 @@ input:hover {
     color: #3a3e4a;
 }
 
+.plus-icon {
+    stroke: white;
+    width: 30px;
+}
+
 
 /* display  */
 

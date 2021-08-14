@@ -144,6 +144,7 @@ function highlightLine() {
 }
 
 function onAddLine(txt = 'Enter text') {
+    document.querySelector('[name=meme-txt]').value = '';
     addLine(txt, gElCanvas.width / 15);
     renderCanvas();
     document.querySelector('[name=meme-txt]').focus();
