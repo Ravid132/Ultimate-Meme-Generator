@@ -1,14 +1,18 @@
 'use strict'
 
 const MEME_DB = 'MemeDB';
+const gTouchev = ['touchstart', 'touchmove', 'touchend'];
 var gSavedMemes = [];
 var gKeyWords = {
-    'happy': 1,
-    'funny': 1,
-    'animals': 1,
-    'cute': 1,
-    'crazy': 1,
+    'all': 0,
+    'funny': 0,
+    'happy': 0,
+    'animals': 0,
+    'movies': 0,
+    'cute': 0,
+    'men': 0
 }
+var gCurrentKeyword = 'all';
 
 var gMeme = {
     selectedImgId: 1,
@@ -16,106 +20,117 @@ var gMeme = {
     lines: [{
         txt: 'I never eat Falafel',
         size: 20,
-        align: 'left',
-        color: 'red',
+        // align: 'center',
+        align: '',
+        color: { fill: 'black', outline: 'white' },
+        font: 'Impact',
         posX: 100,
-        posY: 100
+        posY: 100,
+        isDrag: false,
     }]
 }
 var gImgs = [{
         id: 1,
         url: 'meme-images/1.jpg',
-        keywords: ['funny', 'happy', 'cute']
+        keywords: ['funny', 'happy']
     },
     {
         id: 2,
         url: 'meme-images/2.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['animals', 'happy', 'cute']
     },
     {
         id: 3,
         url: 'meme-images/3.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['cute', 'happy', 'animals']
     },
     {
         id: 4,
         url: 'meme-images/4.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['animals', 'cute']
     },
     {
         id: 5,
         url: 'meme-images/5.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['cute', 'happy']
     },
     {
         id: 6,
         url: 'meme-images/6.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'happy']
     },
     {
         id: 7,
         url: 'meme-images/7.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'happy', 'cute']
     },
     {
         id: 8,
         url: 'meme-images/8.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'happy', 'movies']
     },
     {
         id: 9,
         url: 'meme-images/9.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'happy', 'cute']
     },
     {
         id: 10,
         url: 'meme-images/10.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['happy', 'men']
     },
     {
         id: 11,
         url: 'meme-images/11.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['happy', 'men']
     },
     {
         id: 12,
         url: 'meme-images/12.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['happy', 'men']
     },
     {
         id: 13,
         url: 'meme-images/13.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'men', 'movies']
     },
     {
         id: 14,
         url: 'meme-images/14.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['movies', 'men']
     },
     {
         id: 15,
         url: 'meme-images/15.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['happy', 'movies', 'men']
     },
     {
         id: 16,
         url: 'meme-images/16.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['happy', 'movies', 'funny', 'men']
     },
     {
         id: 17,
         url: 'meme-images/17.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['men']
     },
     {
         id: 18,
         url: 'meme-images/18.jpg',
-        keywords: ['funny', 'happy', 'crazy']
+        keywords: ['funny', 'happy', 'movies']
     },
 ];
 
 function getImages() {
-    return gImgs;
+    let images = gImgs;
+    console.log(gCurrentKeyword);
+    if (gCurrentKeyword !== 'all') {
+        images = gImgs.filter(image => {
+            return image.keywords.includes(gCurrentKeyword)
+        })
+    }
+    // console.log(images);
+    return images;
 }
 
 function getMeme() {
@@ -127,18 +142,21 @@ function getKeywords() {
 }
 
 
-function createNewMeme(id) {
+function createNewMeme(id, txt, size) {
     gMeme = {
         id: makeId(),
         selectedImgId: id,
         selectedLineIdx: 0,
-        lines: [{ ////////////////////////DELETE?
-            txt: 'just some text',
-            size: 20,
-            align: 'center',
-            color: 'white',
+        lines: [{
+            txt,
+            size,
+            // align: 'center',
+            align: '',
+            color: { fill: 'black', outline: 'white' },
+            font: 'Impact',
             posX: 100,
             posY: 100,
+            isDrag: false,
         }]
     }
 }
@@ -161,14 +179,16 @@ function switchLines() {
 
 }
 
-function addLine() {
+function addLine(txt, size) {
     var newLine = {
-        txt: 'New Line',
-        size: 20,
-        align: 'center',
-        color: 'white',
+        txt,
+        size,
+        align: '',
+        color: { fill: 'black', outline: 'white' },
+        font: 'Impact',
         posX: 100,
         posY: 100,
+        isDrag: false,
     }
     gMeme.lines.push(newLine);
     updateSelectedLine(gMeme.lines.length - 1);
@@ -179,8 +199,6 @@ function deleteLine() {
     var length = gMeme.lines.length
     if (length === 0) return;
     gMeme.lines.splice(currIdx, 1);
-    // if (currIdx > 0) updateSelectedLine(length - 1);
-    // else updateSelectedLine(0)
     updateSelectedLine(0)
 }
 
@@ -225,4 +243,63 @@ function getSavedMemes() {
 function deleteMemeFromStorage(id) {
     gSavedMemes.splice(id, 1);
     saveToStorage(MEME_DB, gSavedMemes);
+}
+
+function alignText(dir) {
+    var line = getSelectedLine();
+    if (!line) return;
+    gCurrMeme.lines[gMeme.selectedLineIdx].align = dir;
+
+}
+
+function changeColor(toChange, value) {
+    var line = getSelectedLine();
+    if (toChange === 'fill') line.color.fill = value;
+    else line.color.outline = value;
+}
+
+function changeFont(font) {
+    console.log(font);
+    var line = getSelectedLine();
+    line.font = font;
+}
+
+function isLine(pos, width) {
+    var line = getSelectedLine();
+
+    if (pos.x < line.posX) return;
+    if (pos.y < line.posY - line.size - 15 ||
+        pos.y > line.posY + 15) return;
+    const distance = Math.sqrt(((line.posX - pos.x) ** 2) + ((line.posY - pos.y) ** 2))
+    return distance <= width;
+}
+
+function getPos(ev) {
+    var pos = { x: ev.offsetX, y: ev.offsetY };
+    if (gTouchev.includes(ev.type)) {
+        ev.preventDefault();
+        ev = ev.changedTouches[0];
+        pos = {
+            x: ev.pageX - ev.target.offsetLeft - ev.target.clientLeft,
+            y: ev.pageY - ev.target.offsetTop - ev.target.clientTop
+        }
+    }
+    return pos;
+}
+
+function moveTextLine(dx, dy) {
+    var line = getSelectedLine();
+    line.posX += dx;
+    line.posY += dy;
+}
+
+function setDrag(drag) {
+    console.log(drag);
+    var line = getSelectedLine();
+    line.isDrag = drag;
+}
+
+function filterByKeyword(keyword) {
+    gKeyWords[keyword]++;
+    gCurrentKeyword = keyword;
 }

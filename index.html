@@ -11,14 +11,21 @@
 
 <body onload="onInit()">
     <!-- NAV BAR -->
+    <div class="screen" onclick="onToggleMenu()"></div>
     <header class="main-header flex align-center space-between">
         <div class="logo flex">MemeGenerator</div>
-        <ul class="main-nav flex clean-list align-center">
-            <li><a id="gallery" class="flex align-center active" onclick="onLoadGallery()">Gallery</a></li>
-            <li><a id="about" class="flex align-center ">About</a></li>
-            <li><a id="myMemes" class="flex align-center" onclick="onLoadMyMemes()">My Memes</a></li>
+        <i class="hamburger-menu" onclick="onToggleMenu()">☰</i>
+        <ul class="main-nav flex clean-list align-center nav-hidden">
+            <li><a data-trans="gallery" id="gallery" class="flex align-center active" onclick="onLoadGallery()">Gallery</a></li>
+            <li><a data-trans="about" id="about" class="flex align-center ">About</a></li>
+            <li><a data-trans="my-memes" id="myMemes" class="flex align-center" onclick="onLoadMyMemes()">My Memes</a>
+            </li>
         </ul>
     </header>
+    <!-- <select onchange="onSetLang(this.value)">
+        <option value="en">English</option>
+        <option value="he">עברית</option>
+    </select> -->
 
     <!-- GALLERY -->
     <section class="gallery-container main-layout">
@@ -27,19 +34,22 @@
                 <input type="search" class="search-input" placeholder="Search" name="search" />
                 <img src="icons/search-icon.svg" />
             </div>
-            <div class="keywords-container flex space-evenly"></div>
-            <button class="keywords-btn">More</button>
+            <div class="keywords-container flex space-evenly">
+                <ul class="keywords-list flex clean-list align-center">
+                </ul>
+            </div>
+            <!-- <button data-trans="more" class="keywords-btn">More</button> -->
         </div>
         <div class="images-container images-gallery"></div>
     </section>
 
     <!-- CANVAS/EDITOR-->
-    <main class="editor-container main-layout display-none flex">
+    <main class="editor-container main-layout display-none flex align-center">
         <section class="canvas-container">
-            <canvas id="canvas" width="450" height="450"></canvas>
+            <canvas id="canvas" class="canvas-content" width="450" height="450"></canvas>
         </section>
 
-        <section class="edits-container flex column align-center justify-center">
+        <section class="edits-container flex column align-center space-evenly">
             <input class="meme-txt-input" type="text" name="meme-txt" placeholder="please enter your text here" oninput="onTextChange(this.value)" />
             <div class="line-edits-container">
                 <button class="switch-line-btn" onclick="onSwitchLines()">
@@ -57,7 +67,6 @@
             </div>
             <div class="txt-edits-container grid">
                 <button class="txt-btn increase-font-size" onclick="onChangeTextSize(2)">
-                    <!-- <img src="icons/A+.svg" /> -->
                     <img src="icons/A+.png" />
                 </button>
                 <button class="txt-btn decrease-font-size" onclick="onChangeTextSize(-2)">
@@ -66,49 +75,51 @@
                 <!-- <button onclick="onMoveText(-5)">Up</button>
                 <button onclick="onMoveText(5)">Down</button> -->
 
-                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                <button class="txt-btn txt-align" onclick="onAlignText('left')">
                     <img src="icons/move-left-icon.svg" />
                 </button>
-                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                <button class="txt-btn txt-align" onclick="onAlignText('middle')">
                     <img src="icons/move-middle-icon.svg" />
                 </button>
-                <button class="txt-btn txt-align" onclick="onMoveText(5)">
+                <button class="txt-btn txt-align" onclick="onAlignText('right')">
                     <img src="icons/move-right-icon.svg" />
                 </button>
 
-                <select class="txt-btn font-family-select" onclick="onMoveText(5)">
+                <select class="txt-btn font-family-select" onchange="onChangeFont(value)">
                     <option value="impact">Impact</option>
                     <option value="poppins">Poppins</option>
-
-                    <!-- <img src="icons/impact.png" />
-                    <img src="icons/arrowdown-icon.svg" /> -->
                 </select>
+                <label>
+                    <img class="color-btn" src="icons/s-icon.png" />
+                    <input name="txt-outline" type="color" value="#ffffff" class="color-input txt-btn outline-txt-color"
+                        onchange="onChangeColor('outline',value)">
+                    </input>
+                </label>
 
-                <button class="txt-btn outline-txt-color" onclick="onMoveText(5)">
-                    <img src="icons/s-icon.png" />
-                </button>
 
-                <button class="txt-btn fill-txt-color" onclick="onMoveText(5)">
-                    <img src="icons/color-icon.svg" />
-                </button>
-
+                <label>
+                    <img class="txt-fill color-btn" src="icons/color-icon.svg" />
+                    <input class="color-input" name="txt-fill" type="color" value="#ffffff"
+                        onchange="onChangeColor('fill',value)">
+                    </input>
+                </label>
 
             </div>
 
             <div class="share-download-container flex align-center space-between  ">
                 <button class="share-btn flex align-center">
                     <img src="icons/share-icon.svg" />
-                    <p>Share</p>
+                    <p data-trans="share">Share</p>
                 </button>
 
                 <button class="download-btn flex align-center justify-center">
                     <img src="icons/download-icon.svg" />
-                    <p>Download</p>
+                    <a href="#" download="myMeme" data-trans="download" onclick="onDownload(this)">Download</a>
                 </button>
             </div>
             <button class="save-btn flex align-center justify-center" onclick="onSaveMeme()">
                 <!-- <img src="icons/download-icon.svg" /> -->
-                <p>Save</p>
+                <p data-trans="save">Save</p>
             </button>
         </section>
 
@@ -120,12 +131,14 @@
         <div class="my-gallery images-container">
 
         </div>
+
     </section>
     <!-- FOOTER -->
 
     <script src="js/main.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/storage-service.js"></script>
+    <script src="js/i18n-service.js"></script>
     <script src="js/meme-service.js"></script>
     <script src="js/meme-controller.js"></script>
 
