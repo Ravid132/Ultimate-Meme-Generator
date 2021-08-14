@@ -13,6 +13,7 @@ let gKeyWords = {
     'men': 0
 }
 let gCurrentKeyword = 'all';
+let gSearch = '';
 
 let gMeme = {
     selectedImgId: 1,
@@ -123,13 +124,20 @@ let gImgs = [{
 
 function getImages() {
     let images = gImgs;
-    console.log(gCurrentKeyword);
+
     if (gCurrentKeyword !== 'all') {
         images = gImgs.filter(image => {
             return image.keywords.includes(gCurrentKeyword)
         })
     }
-    // console.log(images);
+    if (gSearch !== '') {
+        images = gImgs.filter(image => {
+            console.log(gSearch);
+            console.log(image.keywords);
+            return image.keywords.includes(gSearch);
+        })
+    }
+
     return images;
 }
 
@@ -266,6 +274,11 @@ function changeFont(font) {
 
 
 function filterByKeyword(keyword) {
+    gSearch = '';
     gKeyWords[keyword]++;
     gCurrentKeyword = keyword;
+}
+
+function search(str) {
+    gSearch = str;
 }

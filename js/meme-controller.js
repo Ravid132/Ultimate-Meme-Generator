@@ -311,3 +311,9 @@ function onDownload(elLink) {
     elLink.href = data;
     gReadyToSave = false;
 }
+
+function onSearch() {
+    let str = document.querySelector('[name=search]').value;
+    search(str.toLowerCase());
+    renderGallery();
+}
