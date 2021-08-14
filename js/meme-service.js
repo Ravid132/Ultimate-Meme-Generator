@@ -132,12 +132,11 @@ function getImages() {
     }
     if (gSearch !== '') {
         images = gImgs.filter(image => {
-            console.log(gSearch);
-            console.log(image.keywords);
-            return image.keywords.includes(gSearch);
+            return image.keywords.some(word => {
+                return word.startsWith(gSearch);
+            })
         })
     }
-
     return images;
 }
 
@@ -172,7 +171,6 @@ function createNewMeme(id, txt, size) {
 // ****************************************************************
 function updateSelectedLine(idx = 0) {
     gMeme.selectedLineIdx = idx;
-    console.log('curr index', idx);
 }
 
 function getSelectedLine() {
@@ -267,7 +265,6 @@ function changeColor(toChange, value) {
 }
 
 function changeFont(font) {
-    console.log(font);
     let line = getSelectedLine();
     line.font = font;
 }

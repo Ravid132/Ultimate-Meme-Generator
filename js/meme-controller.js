@@ -287,14 +287,12 @@ function onSetLang(lang) {
 }
 
 function onFilter(keyword) {
-    console.log(keyword);
     filterByKeyword(keyword);
     renderGallery();
 }
 
 function renderKeywords() {
     let keywords = getKeywords();
-    console.log(keywords);
     keywords = Object.keys(keywords);
     let strHTML = keywords.map(word => {
         return `<li class="keyword" onclick="onFilter('${word}')">${word}</li> `
@@ -307,7 +305,6 @@ function onDownload(elLink) {
     gReadyToSave = true;
     renderCanvas();
     const data = gElCanvas.toDataURL()
-    console.log(data);
     elLink.href = data;
     gReadyToSave = false;
 }
