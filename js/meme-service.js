@@ -2,8 +2,8 @@
 
 const MEME_DB = 'MemeDB';
 const gTouchev = ['touchstart', 'touchmove', 'touchend'];
-var gSavedMemes = [];
-var gKeyWords = {
+let gSavedMemes = [];
+let gKeyWords = {
     'all': 0,
     'funny': 0,
     'happy': 0,
@@ -12,9 +12,9 @@ var gKeyWords = {
     'cute': 0,
     'men': 0
 }
-var gCurrentKeyword = 'all';
+let gCurrentKeyword = 'all';
 
-var gMeme = {
+let gMeme = {
     selectedImgId: 1,
     selectedLineIdx: 0,
     lines: [{
@@ -29,7 +29,7 @@ var gMeme = {
         isDrag: false,
     }]
 }
-var gImgs = [{
+let gImgs = [{
         id: 1,
         url: 'meme-images/1.jpg',
         keywords: ['funny', 'happy']
@@ -173,14 +173,14 @@ function getSelectedLine() {
 }
 
 function switchLines() {
-    var lineIdx = gMeme.selectedLineIdx + 1;
+    let lineIdx = gMeme.selectedLineIdx + 1;
     if (lineIdx === gMeme.lines.length) lineIdx = 0;
     updateSelectedLine(lineIdx);
 
 }
 
 function addLine(txt, size) {
-    var newLine = {
+    let newLine = {
         txt,
         size,
         align: '',
@@ -195,27 +195,27 @@ function addLine(txt, size) {
 }
 
 function deleteLine() {
-    var currIdx = gMeme.selectedLineIdx;
-    var length = gMeme.lines.length
+    let currIdx = gMeme.selectedLineIdx;
+    let length = gMeme.lines.length
     if (length === 0) return;
     gMeme.lines.splice(currIdx, 1);
     updateSelectedLine(0)
 }
 
 function changeCanvasText(txt) {
-    var selectedLine = getSelectedLine()
+    let selectedLine = getSelectedLine()
     if (selectedLine) selectedLine.txt = txt;
 }
 
 function moveText(val) {
-    var selectedLine = getSelectedLine();
+    let selectedLine = getSelectedLine();
     if (selectedLine.posY + val <= selectedLine.size ||
         selectedLine.posY + val >= gElCanvas.height) return;
     if (selectedLine) selectedLine.posY += val;
 }
 
 function changeTextSize(val) {
-    var selectedLine = getSelectedLine();
+    let selectedLine = getSelectedLine();
     selectedLine.size += val;
 }
 
@@ -223,7 +223,7 @@ function changeTextSize(val) {
 // SAVE TO STORAGE
 
 function saveMemeToStorage(meme) {
-    var memeData = {
+    let memeData = {
         meme: gMeme,
         url: meme.toDataURL()
     }
@@ -246,58 +246,24 @@ function deleteMemeFromStorage(id) {
 }
 
 function alignText(dir) {
-    var line = getSelectedLine();
+    let line = getSelectedLine();
     if (!line) return;
     gCurrMeme.lines[gMeme.selectedLineIdx].align = dir;
 
 }
 
 function changeColor(toChange, value) {
-    var line = getSelectedLine();
+    let line = getSelectedLine();
     if (toChange === 'fill') line.color.fill = value;
     else line.color.outline = value;
 }
 
 function changeFont(font) {
     console.log(font);
-    var line = getSelectedLine();
+    let line = getSelectedLine();
     line.font = font;
 }
 
-function isLine(pos, width) {
-    var line = getSelectedLine();
-
-    if (pos.x < line.posX) return;
-    if (pos.y < line.posY - line.size - 15 ||
-        pos.y > line.posY + 15) return;
-    const distance = Math.sqrt(((line.posX - pos.x) ** 2) + ((line.posY - pos.y) ** 2))
-    return distance <= width;
-}
-
-function getPos(ev) {
-    var pos = { x: ev.offsetX, y: ev.offsetY };
-    if (gTouchev.includes(ev.type)) {
-        ev.preventDefault();
-        ev = ev.changedTouches[0];
-        pos = {
-            x: ev.pageX - ev.target.offsetLeft - ev.target.clientLeft,
-            y: ev.pageY - ev.target.offsetTop - ev.target.clientTop
-        }
-    }
-    return pos;
-}
-
-function moveTextLine(dx, dy) {
-    var line = getSelectedLine();
-    line.posX += dx;
-    line.posY += dy;
-}
-
-function setDrag(drag) {
-    console.log(drag);
-    var line = getSelectedLine();
-    line.isDrag = drag;
-}
 
 function filterByKeyword(keyword) {
     gKeyWords[keyword]++;

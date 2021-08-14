@@ -1,9 +1,9 @@
 'use strict'
 
-var gElCanvas = document.querySelector('canvas');
-var gCtx = canvas.getContext('2d')
-var gCurrMeme;
-var gPos;
+let gElCanvas = document.querySelector('canvas');
+let gCtx = canvas.getContext('2d')
+let gCurrMeme;
+let gPos;
 let gReadyToSave;
 
 function onInit() {
@@ -33,7 +33,7 @@ function addEventListeners() {
 }
 
 function onResizeCanvas() {
-    var elCanvasContainer = document.querySelector('.canvas-container');
+    let elCanvasContainer = document.querySelector('.canvas-container');
     gElCanvas.style.height = '100%';
     gElCanvas.style.width = '100%';
     gElCanvas.height = elCanvasContainer.offsetHeight;
@@ -41,9 +41,9 @@ function onResizeCanvas() {
 }
 
 function onMouseDown(ev) {
-    var pos = getPos(ev);
-    var line = getSelectedLine();
-    var width = gCtx.measureText(line.txt).width;
+    let pos = getPos(ev);
+    let line = getSelectedLine();
+    let width = gCtx.measureText(line.txt).width;
     if (!isLine(pos, width)) return;
     setDrag(true);
     document.body.style.cursor = 'grabbing';
@@ -51,12 +51,12 @@ function onMouseDown(ev) {
 }
 
 function onMouseMove(ev) {
-    var line = getSelectedLine();
+    let line = getSelectedLine();
     if (!line) return;
     if (!line.isDrag) return;
-    var pos = getPos(ev);
-    var dx = pos.x - gPos.x;
-    var dy = pos.y - gPos.y;
+    let pos = getPos(ev);
+    let dx = pos.x - gPos.x;
+    let dy = pos.y - gPos.y;
     moveTextLine(dx, dy);
     gPos = pos;
     renderCanvas();
@@ -68,9 +68,9 @@ function onMouseUp() {
 }
 
 function renderGallery() {
-    var images = getImages();
-    var elGallery = document.querySelector('.images-gallery');
-    var strHTML = images.map((img) => {
+    let images = getImages();
+    let elGallery = document.querySelector('.images-gallery');
+    let strHTML = images.map((img) => {
         return `
             <img class="meme" src="${img.url}" id="${img.id}" onclick="onSelectImage('${img.id}')" />
             `
@@ -81,7 +81,7 @@ function renderGallery() {
 function renderCanvas() {
     if (!gCtx) return;
     gCurrMeme = getMeme();
-    var img = document.getElementById(gCurrMeme.selectedImgId);
+    let img = document.getElementById(gCurrMeme.selectedImgId);
 
 
     //RenderText
@@ -90,51 +90,10 @@ function renderCanvas() {
 }
 
 function drawTextOnCanvas() {
-    var lines = gCurrMeme.lines;
-    var selectedLine = getSelectedLine();
+    let lines = gCurrMeme.lines;
+    let selectedLine = getSelectedLine();
 
-    var txt = document.querySelector('[name=meme-txt]').value;
-    if (selectedLine) {
-
-        // var line = gCurrMeme.lines[gCurrMeme.selectedLineIdx];
-        // // var width = gCtx.measureText(line.txt).width + 15;
-        // var width = gCtx.measureText(line.txt).width;
-        // // var height = line.size + 20;
-        // var height = line.size * 1.2;
-
-        // var xPos = line.posX;
-        // // var xPos = line.posX - width;
-
-        // // var yPos = line.posY - (height / 2);
-        // var yPos = line.posY - (height);
-        // width = width;
-        // height = height * 2;
-        // if (line.align === 'right' && !line.isDrag) {
-        //     xPos = gElCanvas.width - width - 5;
-        //     line.posX = xPos;
-        // } else if (line.align === 'left' && !line.isDrag) {
-        //     xPos = 5;
-        //     line.posX = 5;
-        // } else if (line.align === 'center' && !line.isDrag) {
-        //     xPos = gElCanvas.width / 2 - width / 2;
-        //     line.posX = xPos;
-        // }
-
-
-        // gCtx.font = line.size + 'px ' + line.font;
-
-        // gCtx.beginPath();
-        // gCtx.rect(xPos, yPos, width, height);
-        // gCtx.strokeStyle = '#000';
-        // gCtx.setLineDash([3]);
-        // gCtx.strokeRect(xPos, yPos, width, height);
-        // gCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        // gCtx.fillRect(xPos, yPos, width, height);
-        // gCtx.setLineDash([0]);
-
-    } else {
-        //default values
-    }
+    // let txt = document.querySelector('[name=meme-txt]').value;
     if (lines) {
         lines.forEach(line => {
             gCtx.font = `${line.size}px ${line.font}`;
@@ -151,18 +110,13 @@ function drawTextOnCanvas() {
 
 function highlightLine() {
     if (gReadyToSave) return;
-    // var line = gCurrMeme.lines[gCurrMeme.selectedLineIdx];
-    var line = getSelectedLine();
-    // var width = gCtx.measureText(line.txt).width + 15;
-    var width = gCtx.measureText(line.txt).width;
-    // var height = line.size + 20;
-    var height = line.size * 1.2;
+    let line = getSelectedLine();
+    let width = gCtx.measureText(line.txt).width;
+    let height = line.size * 1.2;
 
-    var xPos = line.posX;
-    // var xPos = line.posX - width;
+    let xPos = line.posX;
 
-    // var yPos = line.posY - (height / 2);
-    var yPos = line.posY - (height);
+    let yPos = line.posY - (height);
     width = width;
     height = height * 2;
     if (line.align === 'right' && !line.isDrag) {
@@ -192,14 +146,13 @@ function highlightLine() {
 function onAddLine(txt = 'Enter text') {
     addLine(txt, gElCanvas.width / 15);
     renderCanvas();
-    //focus on new Line
     document.querySelector('[name=meme-txt]').focus();
 }
 
 function onDeleteLine() {
     deleteLine();
     renderCanvas();
-    document.querySelector('[name=meme-txt]').focus(); ///
+    document.querySelector('[name=meme-txt]').focus();
 }
 
 function onTextChange(input) {
@@ -232,11 +185,11 @@ function onSelectImage(id, txt = 'Enter Text') {
 
 function displayContent(content) {
 
-    var elEditor = document.querySelector('.editor-container');
-    var elNavGallery = document.querySelector('#gallery');
-    var elNavMyMemes = document.querySelector('#myMemes');
-    var elGallery = document.querySelector('.gallery-container');
-    var elMyMemes = document.querySelector('.my-gallery');
+    let elEditor = document.querySelector('.editor-container');
+    let elNavGallery = document.querySelector('#gallery');
+    let elNavMyMemes = document.querySelector('#myMemes');
+    let elGallery = document.querySelector('.gallery-container');
+    let elMyMemes = document.querySelector('.my-gallery');
 
     switch (content) {
         case 'editor':
@@ -288,10 +241,10 @@ function onSaveMeme() {
 }
 
 function renderSavedGallery() {
-    var memes = loadMemesFromStorage();
-    var elMyGallery = document.querySelector('.my-gallery');
+    let memes = loadMemesFromStorage();
+    let elMyGallery = document.querySelector('.my-gallery');
     if (!memes || !memes.length) return elMyGallery.innerHTML = `<h1 trans-data="no-memes-message">You dont have any memes</h1>`;
-    var strHTML = memes.map((meme, idx) => {
+    let strHTML = memes.map((meme, idx) => {
         return `
         <div>
         <img class="meme" src="${meme.url}" />
@@ -339,7 +292,7 @@ function onFilter(keyword) {
 }
 
 function renderKeywords() {
-    var keywords = getKeywords();
+    let keywords = getKeywords();
     console.log(keywords);
     keywords = Object.keys(keywords);
     let strHTML = keywords.map(word => {
