@@ -8,8 +8,7 @@ let gReadyToSave;
 
 function onInit() {
     gReadyToSave = false;
-    renderGallery();
-    renderKeywords();
+    onInitGallery();
     getSavedMemes();
     addEventListeners();
 }
@@ -67,22 +66,12 @@ function onMouseUp() {
     document.body.style.cursor = 'auto';
 }
 
-function renderGallery() {
-    let images = getImages();
-    let elGallery = document.querySelector('.images-gallery');
-    let strHTML = images.map((img) => {
-        return `
-            <img class="meme" src="${img.url}" id="${img.id}" onclick="onSelectImage('${img.id}')" />
-            `
-    });
-    elGallery.innerHTML = strHTML.join('');
-}
+
 
 function renderCanvas() {
     if (!gCtx) return;
     gCurrMeme = getMeme();
     let img = document.getElementById(gCurrMeme.selectedImgId);
-
 
     //RenderText
     gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height); //Add onload?
@@ -100,16 +89,17 @@ function drawTextOnCanvas() {
             gCtx.lineWidth = 1;
             gCtx.strokeStyle = line.color.outline;
             gCtx.fillStyle = line.color.fill;
-            gCtx.textAlign = line.textAlign;
-            gCtx.fillText(line.txt, line.posX, line.posY);
-            gCtx.strokeText(line.txt, line.posX, line.posY);
-            if (line === selectedLine) highlightLine();
+            gCtx.textAlign = line.align
+            if (line !== selectedLine) {
+                gCtx.fillText(line.txt, line.posX, line.posY);
+                gCtx.strokeText(line.txt, line.posX, line.posY);
+            } else highlightLine();
         })
     }
 }
 
 function highlightLine() {
-    if (gReadyToSave) return;
+    // if (gReadyToSave) return;
     let line = getSelectedLine();
     let width = gCtx.measureText(line.txt).width;
     let height = line.size * 1.2;
@@ -118,20 +108,26 @@ function highlightLine() {
 
     let yPos = line.posY - (height);
     width = width;
-    height = height * 2;
-    if (line.align === 'right' && !line.isDrag) {
-        xPos = gElCanvas.width - width - 5;
-        line.posX = xPos;
-    } else if (line.align === 'left' && !line.isDrag) {
+
+    xPos = line.posX - width / 2;
+    if (line.align === 'left') {
         xPos = 5;
-        line.posX = 5;
-    } else if (line.align === 'center' && !line.isDrag) {
-        xPos = gElCanvas.width / 2 - width / 2;
         line.posX = xPos;
+    } else if (line.align === 'right') {
+        xPos = gElCanvas.width - width - 5;
+        line.posX = xPos + width;
+    } else if (line.align === 'center' && !line.isDrag && !gReadyToSave) {
+        xPos = gElCanvas.width / 2 - width / 2;
+        line.posX = xPos + width / 2;
     }
+    line.align = 'center';
 
     gCtx.font = line.size + 'px ' + line.font;
 
+    gCtx.fillText(line.txt, line.posX, line.posY);
+    gCtx.strokeText(line.txt, line.posX, line.posY);
+
+    if (gReadyToSave) return;
     gCtx.beginPath();
     gCtx.rect(xPos, yPos, width, height);
     gCtx.strokeStyle = '#000';
@@ -141,11 +137,13 @@ function highlightLine() {
     gCtx.fillRect(xPos, yPos, width, height);
     gCtx.setLineDash([0]);
 
+    // gCtx.fillText(line.txt, line.posX, line.posY);
+    // gCtx.strokeText(line.txt, line.posX, line.posY);
 }
 
 function onAddLine(txt = 'Enter text') {
-    document.querySelector('[name=meme-txt]').value = '';
     addLine(txt, gElCanvas.width / 15);
+    document.querySelector('[name=meme-txt]').value = '';
     renderCanvas();
     document.querySelector('[name=meme-txt]').focus();
 }
@@ -175,7 +173,6 @@ function onSwitchLines() {
     switchLines();
     renderCanvas();
 }
-
 
 function onSelectImage(id, txt = 'Enter Text') {
     displayContent('editor');
@@ -220,9 +217,7 @@ function displayContent(content) {
     }
 }
 
-function onLoadGallery() {
-    displayContent('gallery');
-}
+
 
 function onLoadMyMemes() {
     displayContent('myMemes');
@@ -249,7 +244,7 @@ function renderSavedGallery() {
         return `
         <div>
         <img class="meme" src="${meme.url}" />
-        <button data-trans="delete" onclick="onDeleteMeme('${idx}')">Delete</button>
+        <button data-trans="delete" class="delete-meme-btn" onclick="onDeleteMeme('${idx}')">Delete</button>
         </div>
         `
     });
@@ -264,8 +259,8 @@ function onDeleteMeme(id) {
 }
 
 
-function onAlignText(dir) {
-    alignText(dir);
+function onAlignText(align) {
+    alignText(align);
     renderCanvas();
 }
 
@@ -286,20 +281,6 @@ function onSetLang(lang) {
     renderCanvas();
 }
 
-function onFilter(keyword) {
-    filterByKeyword(keyword);
-    renderGallery();
-}
-
-function renderKeywords() {
-    let keywords = getKeywords();
-    keywords = Object.keys(keywords);
-    let strHTML = keywords.map(word => {
-        return `<li class="keyword" onclick="onFilter('${word}')">${word}</li> `
-    });
-
-    document.querySelector('.keywords-list').innerHTML = strHTML.join('');
-}
 
 function onDownload(elLink) {
     gReadyToSave = true;
@@ -307,10 +288,4 @@ function onDownload(elLink) {
     const data = gElCanvas.toDataURL()
     elLink.href = data;
     gReadyToSave = false;
-}
-
-function onSearch() {
-    let str = document.querySelector('[name=search]').value;
-    search(str.toLowerCase());
-    renderGallery();
 }

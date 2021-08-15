@@ -21,8 +21,7 @@ let gMeme = {
     lines: [{
         txt: 'I never eat Falafel',
         size: 20,
-        // align: 'center',
-        align: '',
+        align: 'center',
         color: { fill: 'black', outline: 'white' },
         font: 'Impact',
         posX: 100,
@@ -158,7 +157,7 @@ function createNewMeme(id, txt, size) {
             txt,
             size,
             // align: 'center',
-            align: '',
+            align: 'center',
             color: { fill: 'black', outline: 'white' },
             font: 'Impact',
             posX: 100,
@@ -189,7 +188,7 @@ function addLine(txt, size) {
     let newLine = {
         txt,
         size,
-        align: '',
+        align: 'center',
         color: { fill: 'black', outline: 'white' },
         font: 'Impact',
         posX: 100,
@@ -251,11 +250,10 @@ function deleteMemeFromStorage(id) {
     saveToStorage(MEME_DB, gSavedMemes);
 }
 
-function alignText(dir) {
+function alignText(align) {
     let line = getSelectedLine();
     if (!line) return;
-    gCurrMeme.lines[gMeme.selectedLineIdx].align = dir;
-
+    gCurrMeme.lines[gMeme.selectedLineIdx].align = align;
 }
 
 function changeColor(toChange, value) {

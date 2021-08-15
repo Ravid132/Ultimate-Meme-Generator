@@ -434,6 +434,19 @@ input:hover {
     text-align: left;
 }
 
+.my-gallery {
+    padding-top: 1rem;
+    margin: 0 auto;
+}
+
+.delete-meme-btn {
+    width: 100%;
+    height: 36px;
+    border-radius: 5px;
+    background-color: #fefefe;
+    cursor: pointer;
+}
+
 
 /* HELPERS */
 
